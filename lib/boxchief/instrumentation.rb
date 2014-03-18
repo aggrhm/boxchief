@@ -62,6 +62,10 @@ module Boxchief
       def longest_requests(count=10)
         return @summary.values.sort{|x, y| y[:max] <=> x[:max] }[0..(count-1)].reduce({}) {|memo, val| memo[val[:name]] = {value: val[:max]}; memo; }
       end
+      def frequent_requests(count=10)
+        return @summary.values.sort{|x, y| y[:count] <=> x[:count] }[0..(count-1)].reduce({}) {|memo, val| memo[val[:name]] = {value: val[:count]}; memo; }
+      end
+
 
       def count
         return @reqs.length
