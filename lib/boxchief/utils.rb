@@ -43,37 +43,39 @@ module Boxchief
       return {lines: lines, offset: curr_len}
     end
 
-    def self.get_matching_lines_since(file, exp, opts={})
-      @file_offsets ||= {}
-      do_count = opts[:count] || false
-      lines = nil
+    ## LOGREADER
+    class LogReader
 
-      # handle empty file
-      size = File.size?(file)
-      if size.nil?
-        @file_offsets[file] = nil
-        return nil
-      else
-
+      def initialize(path, exp)
+        @path = path
+        @exp = exp
       end
 
-      # update offset
-      if @file_offsets[file].nil?
-        # file hasn't been read yet, so set offset to end and return nil
-        @file_offsets[file] = size
-        return nil
-      else
-        # read file from offset
-        ret = self.get_matching_lines(file, exp, @file_offsets[file])
-        @file_offsets[file] = ret[:offset]
-        lines = ret[:lines]
-      end
+      def get_matching_lines_since
+        lines = nil
 
-      if do_count
-        return lines.length
-      else
+        # handle empty file
+        size = File.size?(@path)
+        if size.nil?
+          @file_offset = nil
+          return nil
+        end
+
+        # update offset
+        if @file_offset.nil?
+          # file hasn't been read yet, so set offset to end and return nil
+          @file_offset = size
+          return nil
+        else
+          # read file from offset
+          ret = Boxchief::Utils.get_matching_lines(@path, @exp, @file_offset)
+          @file_offset = ret[:offset]
+          lines = ret[:lines]
+        end
+
         return lines
       end
+
     end
 
   end
