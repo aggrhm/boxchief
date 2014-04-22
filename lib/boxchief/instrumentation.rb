@@ -8,25 +8,28 @@ module Boxchief
 
     def watch_request
       t1 = Time.now
+      @request_profile = {
+        controller: params[:controller],
+        action: params[:action]
+      }
       begin
         yield
       rescue => exception
         t2 = Time.now
-        log_request_data({time: t2-t1, error: (exception.message || "An error occurred")})
+        @request_profile[:time] = (t2-t1) * 1000
+        @request_profile[:error] = exception.message || "An error occurred"
+        log_request_profile
         raise exception
       else
         t2 = Time.now
-        log_request_data({time: t2-t1})
+        @request_profile[:time] = (t2-t1) * 1000
+        log_request_profile
       end
     end
 
-    def log_request_data(data)
-      data[:time] = data[:time] * 1000
-      data[:controller] = params[:controller]
-      data[:action] = params[:action]
-      Rails.logger.info "REQUESTDATA: #{data.to_json}"
+    def log_request_profile
+      Rails.logger.info "REQUEST_PROFILE: #{@request_profile.to_json}"
     end
-
     
   end
 

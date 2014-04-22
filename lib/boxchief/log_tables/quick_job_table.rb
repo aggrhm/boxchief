@@ -4,15 +4,16 @@ module Boxchief
 
     class QuickJobTable
 
-      def initialize(lines)
+      def initialize(lines, prefix)
         @lines = lines
+        @prefix = prefix
         self.parse_lines
         self.build_summary
       end
 
       def parse_lines
         @jobs = @lines.collect do |line|
-          JSON.parse(line.split("JOBDATA:").last.strip)
+          JSON.parse(line.split(@prefix).last.strip)
         end
       end
 

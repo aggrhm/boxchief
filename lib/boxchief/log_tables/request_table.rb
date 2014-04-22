@@ -4,15 +4,16 @@ module Boxchief
 
     class RequestTable
 
-      def initialize(lines)
+      def initialize(lines, prefix)
         @lines = lines
+        @prefix = prefix
         self.parse_lines
         self.build_summary
       end
 
       def parse_lines
         @reqs = @lines.collect do |line|
-          JSON.parse(line.split("REQUESTDATA:").last.strip)
+          JSON.parse(line.split(@prefix).last.strip)
         end
       end
 
