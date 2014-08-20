@@ -5,18 +5,21 @@ module Boxchief
   class Reporter
 
     def initialize(opts)
+      @options = opts
       @app_token = opts[:app_token]
-      @server = opts[:server] || Boxchief::Utils.get_hostname
       @url = opts[:url] || "http://boxchief.com"
+
+      if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
+        @options[:server] = Boxchief::Utils.get_hostname
+      end
     end
 
     def report(data)
-      opts = {}
-      opts['app_token'] = @app_token
-      opts['server'] = @server
-      opts['data'] = data.to_json
+      rep = {}.merge(@options)
+      rep['app_token'] = @app_token
+      rep['data'] = data.to_json
       conn = Faraday.new(:url => @url)
-      resp = conn.post "/api/stats/report", opts
+      resp = conn.post "/api/stats/report", rep
       return resp
     end
   end

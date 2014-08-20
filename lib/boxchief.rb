@@ -1,3 +1,4 @@
+require "json"
 require "boxchief/version"
 require "boxchief/utils"
 require "boxchief/reporter"
