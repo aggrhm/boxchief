@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
 
-  spec.add_dependency 'usagewatch'
-  spec.add_dependency 'sys-proctable'
-  spec.add_dependency 'faraday'
+  spec.add_dependency 'usagewatch', '~> 0.0.7'
+  spec.add_dependency 'sys-proctable', '~> 0.9.4'
+  spec.add_dependency 'faraday', '~> 0.8.9'
 end
