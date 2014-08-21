@@ -43,6 +43,46 @@ module Boxchief
       return {lines: lines, offset: curr_len}
     end
 
+    def self.collect_unicorn_data(pfx, opts)
+      data = {}
+      log_dir = File.join(opts[:app_path], 'log')
+      pid_dir = File.join(opts[:app_path], 'tmp', 'pids')
+      env = opts[:env]
+
+      opts[:req_lr] ||= LogReader.new("#{log_dir}/#{env.to_s}.log", "REQUEST_PROFILE:")
+
+      data["#{pfx}_unicorn_workers"] = self.get_worker_count("#{pid_dir}/unicorn.pid") || 0
+
+      lines = opts[:req_lr].get_matching_lines_since
+      unless lines.nil?
+        rt = Boxchief::LogTables::RequestTable.new(lines, "REQUEST_PROFILE:")
+        data["#{pfx}_requests"] = rt.count
+        data["#{pfx}_request_time_map"] = rt.longest_requests_map
+        data["#{pfx}_request_count_map"] = rt.frequent_requests_map
+        data["#{pfx}_request_error_map"] = rt.errors_map
+      end
+      return data
+    end
+
+    def self.collect_job_data(opts)
+      data = {}
+      log_dir = File.join(opts[:app_path], 'log')
+      pid_dir = File.join(opts[:app_path], 'tmp', 'pids')
+      opts[:job_lr] ||= LogReader.new("#{log_dir}/job_processor.log", "JOB_PROFILE:")
+
+      data["job_workers"] = self.get_worker_count("#{pid_dir}/job_processor.pid") || 0
+
+      lines = opts[:job_lr].get_matching_lines_since
+      unless lines.nil?
+        rt = Boxchief::LogTables::QuickJobTable.new(lines, "JOB_PROFILE:")
+        data["jobs_completed"] = rt.count
+        data["job_time_map"] = rt.longest_jobs_map
+        data["job_error_map"] = rt.errors_map
+      end
+
+      return data
+    end
+
     ## LOGREADER
     class LogReader
 
