@@ -24,7 +24,7 @@ module Boxchief
         # TODO: add queue_time field
         if h_rqs = request.headers['X-Request-Start']
           h_rqs = h_rqs.gsub(/[^\d\.]/, "").to_f
-          @request_profile[:queue_time] = (t1 - Time.at(h_rqs / 1000.0)) * 1000
+          @request_profile[:queue_time] = (t1 - Time.at(h_rqs)) * 1000
         end
         log_request_profile
       end

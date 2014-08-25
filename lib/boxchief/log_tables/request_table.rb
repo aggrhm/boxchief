@@ -63,7 +63,7 @@ module Boxchief
         qrs = @reqs.collect{|r| r["queue_time"]}.select{|v| !v.nil?}
         return nil if qrs.empty?
         sum = qrs.reduce(:+)
-        return sum.to_f / qrs.count
+        return sum.to_f / qrs.length
       end
 
       def count
