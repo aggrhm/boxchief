@@ -59,6 +59,13 @@ module Boxchief
         end
       end
 
+      def avg_queue_time
+        qrs = @reqs.select{|r| !r["queue_time"].nil?}
+        return nil if qrs.empty?
+        sum = qrs.reduce(:+)
+        return sum.to_f / qrs.count
+      end
+
       def count
         return @reqs.length
       end

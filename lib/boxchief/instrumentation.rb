@@ -7,6 +7,7 @@ module Boxchief
     end
 
     def watch_request
+      ex = nil
       t1 = Time.now
       @request_profile = {
         controller: params[:controller],
@@ -15,16 +16,19 @@ module Boxchief
       begin
         yield
       rescue => exception
-        t2 = Time.now
-        @request_profile[:time] = (t2-t1) * 1000
+        ex = exception
         @request_profile[:error] = exception.message || "An error occurred"
-        log_request_profile
-        raise exception
-      else
+      ensure
         t2 = Time.now
         @request_profile[:time] = (t2-t1) * 1000
+        # TODO: add queue_time field
+        if h_rqs = request.headers['X-Request-Start']
+          h_rqs = h_rqs.gsub(/[^\d\.]/, "").to_f
+          @request_profile[:queue_time] = (t1 - Time.at(h_rqs / 1000.0)) * 1000
+        end
         log_request_profile
       end
+      raise ex if ex
     end
 
     def log_request_profile
