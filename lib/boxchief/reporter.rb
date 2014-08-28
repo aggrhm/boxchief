@@ -9,6 +9,12 @@ module Boxchief
       @options[:interval] = 60
       @logger = nil
       self.process_options
+      
+      # ensure options
+      if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
+        @options[:server] = Boxchief::Utils.get_hostname
+      end
+
     end
 
     def process_options
@@ -16,11 +22,6 @@ module Boxchief
     end
 
     def run
-      # ensure options
-      if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
-        @options[:server] = Boxchief::Utils.get_hostname
-      end
-
       # logger
       @logger = Logger.new( (@options[:log_path] || '/var/log/reporter.log'), 1, 1024*1024)
       @logger.info "Running with options: #{@options.inspect}"
