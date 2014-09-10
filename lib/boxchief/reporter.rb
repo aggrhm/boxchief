@@ -1,4 +1,8 @@
 require 'faraday'
+require 'optparse'
+require 'ostruct'
+require 'logger'
+require 'json'
 
 module Boxchief
 
