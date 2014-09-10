@@ -19,7 +19,7 @@ module Boxchief
           exit 1
         end
         opts.on('-e', '--environment=NAME', 'Specifies the environment to run under') do |e|
-          @options[:environment] = e.to_sym
+          @options[:env] = e.to_sym
         end
         opts.on('-t', '--app-token=TOKEN', 'Boxchief App Token') do |t|
           @options[:app_token] = t.strip
@@ -31,7 +31,7 @@ module Boxchief
       if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
         @options[:server] = Boxchief::Utils.get_hostname
       end
-      @options[:app_path] ||= "/app"
+      @options[:app_path] ||= Dir.pwd
 
     end
 
