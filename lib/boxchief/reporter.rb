@@ -12,17 +12,31 @@ module Boxchief
       @options = opts
       @options[:interval] = 60
       @logger = nil
+      @option_parser = OptionParser.new do |opts|
+        opts.banner = "Usage: #{File.basename($0)} [options]"
+        opts.on('-h', '--help', 'Show this message') do
+          puts opts
+          exit 1
+        end
+        opts.on('-e', '--environment=NAME', 'Specifies the environment to run under') do |e|
+          @options[:environment] = e.to_sym
+        end
+        opts.on('-t', '--app-token=TOKEN', 'Boxchief App Token') do |t|
+          @options[:app_token] = t.strip
+        end
+      end
       self.process_options
       
       # ensure options
       if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
         @options[:server] = Boxchief::Utils.get_hostname
       end
+      @options[:app_path] ||= "/app"
 
     end
 
     def process_options
-
+      @option_parser.parse!(ARGV)
     end
 
     def run
