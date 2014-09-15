@@ -60,7 +60,7 @@ module Boxchief
         data["#{pfx}_request_time_map"] = rt.longest_requests_map
         data["#{pfx}_request_count_map"] = rt.frequent_requests_map
         data["#{pfx}_request_error_map"] = rt.errors_map
-        data["#{pfx}_request_queue_time"] = rt.avg_queue_time unless rt.avg_queue_time.nil?
+        data["#{pfx}_request_queue_time"] = rt.avg_queue_time || 0
       end
       return data
     end
