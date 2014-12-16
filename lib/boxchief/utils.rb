@@ -18,6 +18,12 @@ module Boxchief
       Usagewatch.uw_memused
     end
 
+    def self.get_disk_usage(path)
+      path = "" if path == nil || path == :all
+      df = `df #{path} --total`
+      df.split(" ").last.to_f.round(2)
+    end
+
     def self.get_tcp_conn_count
       Usagewatch.uw_tcpused
     end
