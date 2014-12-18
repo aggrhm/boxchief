@@ -23,5 +23,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'usagewatch', '~> 0.0.7'
   spec.add_dependency 'sys-proctable', '~> 0.9.4'
+  spec.add_dependency 'sys-filesystem', '~> 1.1.3'
   spec.add_dependency 'faraday', '~> 0.9.0'
 end

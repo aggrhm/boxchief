@@ -1,5 +1,6 @@
 require 'usagewatch'
 require 'sys/proctable'
+require 'sys/filesystem'
 require 'socket'
 
 module Boxchief
@@ -19,9 +20,11 @@ module Boxchief
     end
 
     def self.get_disk_usage(path)
-      path = "" if path == nil || path == :all
-      df = `df #{path} --total`
-      df.split(" ").last.to_f.round(2)
+      stat = Sys::Filesystem.stat(path)
+      if stat.nil?
+        return 0
+      end
+      (( (stat.blocks - stat.blocks_available) / stat.blocks.to_f) * 100).round(2)
     end
 
     def self.get_tcp_conn_count
