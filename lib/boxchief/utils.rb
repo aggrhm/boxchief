@@ -66,6 +66,7 @@ module Boxchief
       unless lines.nil?
         rt = Boxchief::LogTables::RequestTable.new(lines, "REQUEST_PROFILE:")
         data["#{pfx}_requests"] = rt.count
+        data["#{pfx}_request_time"] = rt.avg_time || 0
         data["#{pfx}_request_time_map"] = rt.longest_requests_map
         data["#{pfx}_request_count_map"] = rt.frequent_requests_map
         data["#{pfx}_request_error_map"] = rt.errors_map

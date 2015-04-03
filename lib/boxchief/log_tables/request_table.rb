@@ -66,6 +66,13 @@ module Boxchief
         return (sum.to_f / qrs.length).round(2)
       end
 
+      def avg_time
+        tms = @reqs.collect{|r| r["time"]}.select{|v| !v.nil?}
+        return nil if tms.empty?
+        sum = tms.reduce(:+)
+        return (sum.to_f / tms.length).round(2)
+      end
+
       def count
         return @reqs.length
       end

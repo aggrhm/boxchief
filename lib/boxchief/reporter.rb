@@ -24,6 +24,9 @@ module Boxchief
         opts.on('-t', '--app-token=TOKEN', 'Boxchief App Token') do |t|
           @options[:app_token] = t.strip
         end
+        opts.on('-l', '--log-path=PATH', 'Log path') do |t|
+          @options[:log_path] = t.strip
+        end
       end
       self.process_options
       
@@ -32,6 +35,7 @@ module Boxchief
         @options[:server] = Boxchief::Utils.get_hostname
       end
       @options[:app_path] ||= Dir.pwd
+      @options[:log_path] ||= "/var/log/reporter.log"
 
     end
 
@@ -41,7 +45,7 @@ module Boxchief
 
     def run
       # logger
-      @logger = Logger.new( (@options[:log_path] || '/var/log/reporter.log'), 1, 1024*1024)
+      @logger = Logger.new( @options[:log_path], 1, 1024*1024)
       @logger.info "Running with options: #{@options.inspect}"
 
       # loop
