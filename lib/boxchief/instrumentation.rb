@@ -10,8 +10,7 @@ module Boxchief
       ex = nil
       t1 = Time.now
       @request_profile = {
-        controller: params[:controller],
-        action: params[:action]
+        name: "#{params[:controller]}##{params[:action]}"
       }
       begin
         yield

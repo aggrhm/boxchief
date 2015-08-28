@@ -27,15 +27,22 @@ module Boxchief
         opts.on('-l', '--log-path=PATH', 'Log path') do |t|
           @options[:log_path] = t.strip
         end
+        opts.on('-i', '--interval=SECONDS', 'Report interval period') do |t|
+          @options[:interval] = t.to_i
+        end
       end
+
+      @options[:app_path] ||= Dir.pwd
+      @options[:app_pid_path] ||= File.join(@options[:app_path], "tmp", "pids")
+      @options[:app_log_path] ||= File.join(@options[:app_path], "log")
+      @options[:log_path] ||= "/var/log/reporter.log"
+
       self.process_options
       
       # ensure options
       if @options[:container].nil? && @options[:server].nil? && @options[:host].nil?
         @options[:server] = Boxchief::Utils.get_hostname
       end
-      @options[:app_path] ||= Dir.pwd
-      @options[:log_path] ||= "/var/log/reporter.log"
 
     end
 
@@ -43,10 +50,16 @@ module Boxchief
       @option_parser.parse!(ARGV)
     end
 
+    def prepare
+
+    end
+
     def run
       # logger
       @logger = Logger.new( @options[:log_path], 1, 1024*1024)
       @logger.info "Running with options: #{@options.inspect}"
+
+      self.prepare
 
       # loop
       loop do
@@ -76,6 +89,15 @@ module Boxchief
       unless defined?(Rails)
         require File.join(@options[:app_path], 'config', 'environment')
       end
+    end
+
+    def get_worker_count(name)
+      fp = File.join(@options[:app_pid_path], "#{name}.pid")
+      Utils::get_worker_count(fp)
+    end
+
+    def app_log(name)
+      return File.join(@options[:app_log_path], "#{name}.log")
     end
     
   end
