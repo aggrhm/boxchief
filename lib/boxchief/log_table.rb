@@ -39,6 +39,7 @@ module Boxchief
         e
       }
       self.process_entries
+      return self.entries
     end
 
     def process_entries
@@ -114,6 +115,15 @@ module Boxchief
 
     def count
       return @entries.length
+    end
+
+    def entries
+      return @entries
+    end
+
+    def updated_entries
+      self.update
+      return self.entries
     end
 
   end

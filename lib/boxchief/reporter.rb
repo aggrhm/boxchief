@@ -1,4 +1,3 @@
-require 'faraday'
 require 'optparse'
 require 'ostruct'
 require 'logger'
