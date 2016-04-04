@@ -21,7 +21,7 @@ module Boxchief
         rm = {}
         # build request metrics with averages
         @reqs.each do |req|
-          req_nm = "#{req["controller"]}##{req["action"]}"
+          req_nm = req["name"] || "#{req["controller"]}##{req["action"]}"
           rm_h = rm[req_nm] ||= {count: 0, error_count: 0, sum: 0, max: 0, name: req_nm}
           rm_h[:count] += 1
           rm_h[:sum] += (req["time"] || 0)
